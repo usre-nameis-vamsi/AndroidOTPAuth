@@ -24,17 +24,33 @@ class AuthViewModel : ViewModel() {
     }
 
     fun verifyOtp(input: String) {
-        val success = otpManager.validateOtp(uiState.email, input)
 
-        if (success) {
+        val result = otpManager.validateOtp(uiState.email, input)
+
+        if (result.success) {
             uiState = uiState.copy(
                 isLoggedIn = true,
                 sessionStart = System.currentTimeMillis(),
                 error = null
             )
         } else {
-            uiState = uiState.copy(error = "Invalid OTP")
+            uiState = uiState.copy(
+                error = "Wrong OTP",
+                attemptsLeft = result.attemptsLeft,
+                showReset = result.attemptsLeft == 0
+            )
         }
+    }
+
+    fun resetOtp() {
+        val newOtp = otpManager.generateOtp(uiState.email)
+
+        uiState = uiState.copy(
+            generatedOtp = newOtp,
+            attemptsLeft = 3,
+            showReset = false,
+            error = null
+        )
     }
 
     fun logout() {
