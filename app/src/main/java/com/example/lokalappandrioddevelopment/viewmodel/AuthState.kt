@@ -6,5 +6,7 @@ data class AuthState(
     val isLoggedIn: Boolean = false,
     val error: String? = null,
     val sessionStart: Long? = null,
-    val generatedOtp: String? = null
+    val generatedOtp: String? = null,
+    val attemptsLeft: Int = 3,
+    val showReset: Boolean = false
 )
